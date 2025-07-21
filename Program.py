@@ -1,12 +1,15 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 def main():
     df = load_and_clean_data()
     #top_5_games = get_top_n_games(df,5)
     #plot_top_n_games(top_5_games)
-    publishers_and_sales = get_publishers_and_sales(df,10)
-    plot_publishers_and_sales(publishers_and_sales)
+    #publishers_and_sales = get_publishers_and_sales(df,10)
+    #plot_publishers_and_sales(publishers_and_sales)
+    sales_cor(df,'EU_Sales', 'NA_Sales')
+
 
 
 def load_and_clean_data():
@@ -42,6 +45,28 @@ def plot_publishers_and_sales(sales_by_publisher):
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
     plt.show()
+
+def sales_cor(df,continent1 : str,continent2 : str):
+    continentA=df[continent1]
+    continentB=df[continent2]
+    cor=continentA.corr(continentB, method='spearman')
+
+    sns.regplot(
+        x=continent1,
+        y=continent2,
+        data=df,
+        scatter_kws={'alpha': 0.3, 's': 15},
+        line_kws={'color': 'red'}
+    )
+
+    plt.title(f'Korelacja i linia regresji: {continent1} vs {continent2}')
+    plt.xlabel(f'{continent1} (mln)')
+    plt.ylabel(f'{continent2} (mln)')
+    plt.grid(True, which="both", ls="--", linewidth=0.5)
+    plt.tight_layout()
+    plt.show()
+    print(f'Correlation between {continent1} and {continent2} is {cor}')
+
 
 if __name__ == "__main__":
     main()
