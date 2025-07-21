@@ -1,6 +1,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-data = pd.read_csv("data/vgsales.csv")
-data.head()
-data.info()
+df = pd.read_csv("data/vgsales.csv")
+print(df.head(5))
+print(df.info())
+print(df.isnull().sum())
+
+df=df.dropna()
+print(df.isnull().sum())
+
