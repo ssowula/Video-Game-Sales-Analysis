@@ -29,7 +29,8 @@ To run this analysis locally, follow these steps:
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/ssowula/Video-Game-Sales-Analysis.git](https://github.com/ssowula/Video-Game-Sales-Analysis.git)
+    git clone https://github.com/ssowula/Video-Game-Sales-Analysis.git
+
     cd Video-Game-Sales-Analysis
     ```
 
