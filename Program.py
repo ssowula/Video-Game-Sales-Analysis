@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 def main():
-    df = load_and_clean_data()
+    df = load_and_clean_data('data/vgsales.csv')
     #top_5_games = get_top_n_games(df,5)
     #plot_top_n_games(top_5_games)
     #publishers_and_sales = get_publishers_and_sales(df,10)
@@ -14,10 +14,21 @@ def main():
 
 
 
-def load_and_clean_data():
-    df = pd.read_csv("data/vgsales.csv")
-    df=df.dropna()
-    return df
+def load_and_clean_data(filepath : str):
+    try:
+        df = pd.read_csv(filepath)
+        df=df.dropna()
+        return df
+    except FileNotFoundError:
+        print(f"Plik {filepath} nie został znaleziony.")
+        exit(1)
+    except pd.errors.EmptyDataError:
+        print(f"Plik {filepath} jest pusty.")
+        exit(1)
+    except Exception as e:
+        print(f"Wystąpił błąd przy ładowaniu danych: {e}")
+        exit(1)
+
 def get_top_n_games(df,n : int):
     top_games=df.sort_values(by=['Global_Sales'], ascending=False).head(n)
     return top_games
@@ -33,10 +44,12 @@ def plot_top_n_games(top_games):
     plt.tight_layout()
 
     plt.show()
+
 def get_publishers_and_sales(df,n : int):
     sales_by_publisher=df.groupby('Publisher')['Global_Sales'].sum()
     sales_by_publisher=sales_by_publisher.sort_values(ascending=False).head(n)
     return sales_by_publisher
+
 def plot_publishers_and_sales(sales_by_publisher):
     publishers = sales_by_publisher.index
     sales = sales_by_publisher.values
@@ -46,12 +59,14 @@ def plot_publishers_and_sales(sales_by_publisher):
     plt.ylabel("Sales (mln)")
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
+
     plt.show()
+
 def sales_cor(df,continent1 : str,continent2 : str):
     continentA=df[continent1]
     continentB=df[continent2]
     cor=continentA.corr(continentB, method='spearman')
-
+    print(f'Correlation between {continent1} and {continent2} is {cor}')
     sns.regplot(
         x=continent1,
         y=continent2,
@@ -65,12 +80,14 @@ def sales_cor(df,continent1 : str,continent2 : str):
     plt.ylabel(f'{continent2} (mln)')
     plt.grid(True, which="both", ls="--", linewidth=0.5)
     plt.tight_layout()
+
     plt.show()
-    print(f'Correlation between {continent1} and {continent2} is {cor}')
+
 def get_sales_by_genre(df):
     sales_by_genre = df.groupby(df['Genre'])['Global_Sales'].sum()
     sales_by_genre=sales_by_genre.sort_values(ascending=False)
     return sales_by_genre
+
 def plot_sales_by_genre(sales_by_genre):
     genre=sales_by_genre.index
     sales=sales_by_genre.values
@@ -80,8 +97,8 @@ def plot_sales_by_genre(sales_by_genre):
     plt.ylabel("Sales (mln)")
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-    plt.show()
 
+    plt.show()
 
 if __name__ == "__main__":
     main()
