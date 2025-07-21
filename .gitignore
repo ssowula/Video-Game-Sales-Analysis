@@ -1,0 +1,12 @@
+# Pliki środowiska wirtualnego
+venv/
+
+# Pliki konfiguracyjne IDE
+/.idea/
+
+# Pliki cache Pythona
+__pycache__/
+*.pyc
+
+# Pliki cache Jupyter Notebook
+.ipynb_checkpoints
