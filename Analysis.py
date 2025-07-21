@@ -25,13 +25,13 @@ def load_and_clean_data(filepath : str):
         df=df.dropna()
         return df
     except FileNotFoundError:
-        print(f"Plik {filepath} nie został znaleziony.")
+        print(f"File {filepath} not found.")
         exit(1)
     except pd.errors.EmptyDataError:
-        print(f"Plik {filepath} jest pusty.")
+        print(f"File {filepath} is empty.")
         exit(1)
     except Exception as e:
-        print(f"Wystąpił błąd przy ładowaniu danych: {e}")
+        print(f"An error occurred while loading data: {e}")
         exit(1)
 
 def get_top_n_games(df,n : int):
@@ -44,10 +44,10 @@ def get_publishers_and_sales(df,n : int):
     return sales_by_publisher
 
 def sales_cor(df,continent1 : str,continent2 : str):
-    continentA=df[continent1]
-    continentB=df[continent2]
-    cor=continentA.corr(continentB, method='spearman')
-    print(f'Correlation between {continent1} and {continent2} is {cor}')
+    continent_a=df[continent1]
+    continent_b=df[continent2]
+    cor=continent_a.corr(continent_b, method='spearman')
+    print(f'Correlation between {continent1} and {continent2}: {cor:.4f}')
     sns.regplot(
         x=continent1,
         y=continent2,
@@ -56,7 +56,7 @@ def sales_cor(df,continent1 : str,continent2 : str):
         line_kws={'color': 'red'}
     )
 
-    plt.title(f'Korelacja i linia regresji: {continent1} vs {continent2}')
+    plt.title(f'Correlation and Regression Line: {continent1} vs {continent2}')
     plt.xlabel(f'{continent1} (mln)')
     plt.ylabel(f'{continent2} (mln)')
     plt.grid(True, which="both", ls="--", linewidth=0.5)
@@ -69,7 +69,7 @@ def get_sales_by_genre(df):
     sales_by_genre=sales_by_genre.sort_values(ascending=False)
     return sales_by_genre
 
-def plot_bar_chart(data_series, title, xlabel):
+def plot_bar_chart(data_series, title, x_label):
 
     labels = data_series.index
     values = data_series.values
@@ -77,7 +77,7 @@ def plot_bar_chart(data_series, title, xlabel):
     plt.figure(figsize=(10, 6))
     plt.bar(labels, values)
     plt.title(title)
-    plt.xlabel(xlabel)
+    plt.xlabel(x_label)
     plt.ylabel("Sales (mln)")
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
