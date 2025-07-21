@@ -4,14 +4,19 @@ import seaborn as sns
 
 def main():
     df = load_and_clean_data('data/vgsales.csv')
-    #top_5_games = get_top_n_games(df,5)
-    #plot_top_n_games(top_5_games)
-    #publishers_and_sales = get_publishers_and_sales(df,10)
-    #plot_publishers_and_sales(publishers_and_sales)
-    #sales_cor(df,'EU_Sales', 'NA_Sales')
-    genre_and_sales=get_sales_by_genre(df)
-    plot_sales_by_genre(genre_and_sales)
 
+    top_5_games_df = get_top_n_games(df, 5)
+
+    top_5_series = top_5_games_df.set_index('Name')['Global_Sales']
+    plot_bar_chart(top_5_series, 'Top 5 Games by Global Sales', 'Game')
+
+    publishers_and_sales = get_publishers_and_sales(df, 10)
+    plot_bar_chart(publishers_and_sales, 'Top 10 Publishers by Sales', 'Publisher')
+
+    genre_and_sales = get_sales_by_genre(df)
+    plot_bar_chart(genre_and_sales, 'Total Sales by Genre', 'Genre')
+
+    sales_cor(df, 'EU_Sales', 'NA_Sales')
 
 
 def load_and_clean_data(filepath : str):
@@ -32,35 +37,11 @@ def load_and_clean_data(filepath : str):
 def get_top_n_games(df,n : int):
     top_games=df.sort_values(by=['Global_Sales'], ascending=False).head(n)
     return top_games
-def plot_top_n_games(top_games):
-    games=top_games['Name']
-    sale=top_games['Global_Sales']
-
-    plt.bar(games,sale)
-    plt.title(f'Top {len(top_games)} by global sales')
-    plt.xlabel("Games")
-    plt.ylabel("Sales (mln)")
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-
-    plt.show()
 
 def get_publishers_and_sales(df,n : int):
     sales_by_publisher=df.groupby('Publisher')['Global_Sales'].sum()
     sales_by_publisher=sales_by_publisher.sort_values(ascending=False).head(n)
     return sales_by_publisher
-
-def plot_publishers_and_sales(sales_by_publisher):
-    publishers = sales_by_publisher.index
-    sales = sales_by_publisher.values
-    plt.bar(publishers,sales)
-    plt.title(f'Top {len(sales_by_publisher)} by publishers')
-    plt.xlabel("Publishers")
-    plt.ylabel("Sales (mln)")
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-
-    plt.show()
 
 def sales_cor(df,continent1 : str,continent2 : str):
     continentA=df[continent1]
@@ -88,16 +69,18 @@ def get_sales_by_genre(df):
     sales_by_genre=sales_by_genre.sort_values(ascending=False)
     return sales_by_genre
 
-def plot_sales_by_genre(sales_by_genre):
-    genre=sales_by_genre.index
-    sales=sales_by_genre.values
-    plt.bar(genre,sales)
-    plt.title(f'Top {len(sales_by_genre)} genres by sale')
-    plt.xlabel("Genre")
+def plot_bar_chart(data_series, title, xlabel):
+
+    labels = data_series.index
+    values = data_series.values
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(labels, values)
+    plt.title(title)
+    plt.xlabel(xlabel)
     plt.ylabel("Sales (mln)")
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
-
     plt.show()
 
 if __name__ == "__main__":
