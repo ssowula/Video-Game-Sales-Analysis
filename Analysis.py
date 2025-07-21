@@ -48,6 +48,7 @@ def sales_cor(df,continent1 : str,continent2 : str):
     continent_b=df[continent2]
     cor=continent_a.corr(continent_b, method='spearman')
     print(f'Correlation between {continent1} and {continent2}: {cor:.4f}')
+    plt.figure(figsize=(10, 6))
     sns.regplot(
         x=continent1,
         y=continent2,
