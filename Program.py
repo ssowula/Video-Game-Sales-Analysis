@@ -8,7 +8,9 @@ def main():
     #plot_top_n_games(top_5_games)
     #publishers_and_sales = get_publishers_and_sales(df,10)
     #plot_publishers_and_sales(publishers_and_sales)
-    sales_cor(df,'EU_Sales', 'NA_Sales')
+    #sales_cor(df,'EU_Sales', 'NA_Sales')
+    genre_and_sales=get_sales_by_genre(df)
+    plot_sales_by_genre(genre_and_sales)
 
 
 
@@ -16,7 +18,7 @@ def load_and_clean_data():
     df = pd.read_csv("data/vgsales.csv")
     df=df.dropna()
     return df
-def get_top_n_games(df,n):
+def get_top_n_games(df,n : int):
     top_games=df.sort_values(by=['Global_Sales'], ascending=False).head(n)
     return top_games
 def plot_top_n_games(top_games):
@@ -31,7 +33,7 @@ def plot_top_n_games(top_games):
     plt.tight_layout()
 
     plt.show()
-def get_publishers_and_sales(df,n):
+def get_publishers_and_sales(df,n : int):
     sales_by_publisher=df.groupby('Publisher')['Global_Sales'].sum()
     sales_by_publisher=sales_by_publisher.sort_values(ascending=False).head(n)
     return sales_by_publisher
@@ -45,7 +47,6 @@ def plot_publishers_and_sales(sales_by_publisher):
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
     plt.show()
-
 def sales_cor(df,continent1 : str,continent2 : str):
     continentA=df[continent1]
     continentB=df[continent2]
@@ -66,6 +67,20 @@ def sales_cor(df,continent1 : str,continent2 : str):
     plt.tight_layout()
     plt.show()
     print(f'Correlation between {continent1} and {continent2} is {cor}')
+def get_sales_by_genre(df):
+    sales_by_genre = df.groupby(df['Genre'])['Global_Sales'].sum()
+    sales_by_genre=sales_by_genre.sort_values(ascending=False)
+    return sales_by_genre
+def plot_sales_by_genre(sales_by_genre):
+    genre=sales_by_genre.index
+    sales=sales_by_genre.values
+    plt.bar(genre,sales)
+    plt.title(f'Top {len(sales_by_genre)} genres by sale')
+    plt.xlabel("Genre")
+    plt.ylabel("Sales (mln)")
+    plt.xticks(rotation=45, ha='right')
+    plt.tight_layout()
+    plt.show()
 
 
 if __name__ == "__main__":
